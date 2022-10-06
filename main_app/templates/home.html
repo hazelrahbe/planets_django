@@ -13,14 +13,21 @@
             {% for surface in surfaces %}
         
                 <div class="playlist mb-5">
-                    <h3 class="title is-3 has-text-success">{{surface.namesake}}</h3>
+                    <h3 class="title is-3 has-text-success">{{surface.surface}}</h3>
                     <hr />
         
                     {% for info in surface.moons.all %}
         
                         <div class="song">
                             <span>{{forloop.counter}}</span>
-                            <span><b>{{info.namesake}}</b></span>
+                            <span><b>{{info.surface}}</b></span>
+                            <span>
+                                <a href="{% url 'surface_info_assoc' surface.pk info.pk %}?assoc=remove" class="button is-danger is-outlined">
+                                <span class="icon is-small">
+                                    <i class="fas fa-times"></i>
+                                </span>
+                                </a>
+                            </span>
                         </div>
         
                     {% endfor %}

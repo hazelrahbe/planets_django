@@ -25,9 +25,9 @@ class Info(models.Model):
 
 class Surface(models.Model):
 
-    namesake = models.CharField(max_length=150)
+    surface = models.CharField(max_length=100)
     # this is going to create the many to many relationship and join table
     infos = models.ManyToManyField(Info)
 
     def __str__(self):
-        return self.namesake
+        return self.surface

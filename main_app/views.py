@@ -1,6 +1,7 @@
 from re import template
 from unicodedata import name
 from django.shortcuts import render
+from django.shortcuts import redirect
 from django.views import View # <- View class to handle requests
 from django.http import HttpResponse # <- a class to handle sending a type of response
 from django.views.generic.base import TemplateView
@@ -77,3 +78,13 @@ class PlanetDelete(DeleteView):
     template_name = "planet_delete.html"
     success_url = "/list/"
 
+class SurfacePlanetAssoc(View):
+
+    def get(self, request, pk, info_pk):
+        # get the query param from the url
+        assoc = request.GET.get("assoc")
+        if assoc == "remove":
+            Surface.objects.get(pk=pk).infos.remove(info_pk)
+        if assoc == "add":
+            Surface.objects.get(pk=pk).infos.add(info_pk)
+        return redirect('home')
