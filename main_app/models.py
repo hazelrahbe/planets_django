@@ -13,3 +13,12 @@ class Planet(models.Model):
 
     class Meta:
         ordering = ['name']
+
+class Info(models.Model):
+
+    namesake = models.CharField(max_length=150)
+    years = models.IntegerField(default=0)
+    planet = models.ForeignKey(Planet, on_delete=models.CASCADE, related_name="moons")
+
+    def __str__(self):
+        return self.namesake
