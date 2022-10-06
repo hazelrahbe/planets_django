@@ -1,54 +1,119 @@
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 {% extends 'base.html' %} 
 {% block content %}
 <div class="detail__img">
-    <img src="{{planet.img}}" alt="{{planet.name}}" />
+  <img src="{{planet.img}}" alt="{{planet.name}}" />
 </div>
 <div class="detail__name">
-    {% if planet.verified_planet %}
-    <div class="icon-text">
-        <span class="icon has-text-info">
-            <i class="fas fa-check-circle"></i>
-        </span>
-        <span>Verified</span>
-    </div>
-    {% endif %}
-    <h1 class="title">{{planet.name}}</h1>
+  {% if planet.verified_planet %}
+  <div class="icon-text">
+    <span class="icon has-text-info">
+      <i class="fas fa-check-circle"></i>
+    </span>
+    <span>Verified</span>
+  </div>
+  {% endif %}
+  <h1 class="title">{{planet.name}}</h1>
 </div>
-<div class="detail__container">
-    <div class="buttons">
-        <a href="{% url 'planet_update' planet.pk %}" class="button is-info">
-            <span class="icon">
-                <i class="fas fa-edit"></i>
-            </span>
-        </a>
-        <a href="/planets/{{planet.id}}/delete" class="button is-danger">
-            <span class="icon">
-                <i class="fas fa-trash-alt"></i>
-            </span>
-        </a>
-    </div>
-<div class="detail__songs mb-5">
-    <h3 class="title is-3">Details</h3>
-    
-    {% for info in planet.moons.all %}
-        <div class="song">
-            <span>{{forloop.counter}}</span>
-            <span><b>{{info.namesake}}</b></span>
-            <span>{{info.years}} Earth Years</span>
+    <div class="detail__container">
+        <!-- inside container -->
+    <div class="detail__songs mb-5">
+
+        <h3 class="title is-3">Songs</h3>
+        {% for info in planet.moons.all %}
+        <div class="info">
+        <span>{{forloop.counter}}</span>
+        <span><b>{{info.title}}</b></span>
         </div>
-    {% empty %}
-        <article class="message">
-            <div class="message-header">
-                <p>No Information Available</p>
+        <span>
+          <div class="dropdown">
+            <div class="dropdown-trigger">
+              <button
+                class="button"
+                aria-haspopup="true"
+                aria-controls="dropdown-menu"
+              >
+                <span>Add to surface</span>
+                <span class="icon is-small">
+                  <i class="fas fa-angle-down" aria-hidden="true"></i>
+                </span>
+              </button>
             </div>
-        </article>
-    {% endfor %}
+            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+              <div class="dropdown-content">
+                {% for surface in surfaces %}
+            <!-- each surface becomes a drop
+            down item with the ids needed to add to the join table  -->
+                <a
+                  href="{% url 'surface_info_assoc' surface.pk info.pk %}?assoc=add"
+                  class="dropdown-item"
+                >
+                  {{surface.title}}
+                </a>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </span>
+
+        {% empty %}
+            <article class="message">
+                <div class="message-header">
+                    <p>No infos Available</p>
+                </div>
+            </article>
+
+        {% endfor %}
     </div>
-    <div class="detail__about">
-        <h4 class="title is-4">About</h4>
-        <p>{{planet.bio}}</p>
-    </div>
+    <!-- inside detail infos element below the header -->
+
+<!-- Here you can see the action we provided
+     is to the info_create route with the planet pk -->
+    <form class="mb-5" action="{% url 'info_create' planet.pk %}" method="post">
+        {% csrf_token %}
+        <div class="field has-addons">
+        <div class="control">
+            <input
+            class="input"
+            type="text"
+            name="title"
+            placeholder="Title"
+            required
+            />
+        </div>
+        <div class="control">
+            <input
+            class="input"
+            type="number"
+            name="length"
+            placeholder="Length in Seconds"
+            min="1"
+            required
+            />
+        </div>
+        <div class="control">
+            <input class="button is-primary" type="submit" value="Add info" />
+        </div>
+        </div>
+    </form>
+
+<!-- before the for loop for infos -->
+
+    <!--  above about section  -->
+    <a href="{% url 'planet_update' planet.pk %}" class="button is-info">
+        <span class="icon">
+          <i class="fas fa-edit"></i>
+        </span>
+      </a>
+    <a href="{% url 'planet_delete' planet.pk %}" class="button is-danger">
+      <span class="icon">
+        <i class="fas fa-trash-alt"></i>
+      </span>
+    </a>
+  </div>
+  <div class="detail__about">
+    <h4 class="title is-4">About</h4>
+    <p>{{planet.bio}}</p>
+  </div>
 </div>
 
 {% endblock %}
