@@ -9,4 +9,5 @@ urlpatterns = [
     path('planets/new/', views.PlanetCreate.as_view(), name="planet_create"),
     path('planets/<int:pk>/', views.PlanetDetail.as_view(), name="planet_detail"),
     path('planets/<int:pk>/update',views.PlanetUpdate.as_view(), name="planet_update"),
+    path('planets/<int:pk>/delete',views.PlanetDelete.as_view(), name="planet_delete"),
 ]
