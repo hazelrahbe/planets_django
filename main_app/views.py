@@ -1,9 +1,12 @@
 from re import template
+from unicodedata import name
 from django.shortcuts import render
 from django.views import View # <- View class to handle requests
 from django.http import HttpResponse # <- a class to handle sending a type of response
 from django.views.generic.base import TemplateView
 from .models import Planet
+from django.views.generic.edit import CreateView
+from django.views.generic import DetailView
 # Create your views here.
 
 # Here we will be creating a class called Home and extending it from the View class
@@ -34,8 +37,24 @@ class PlanetList(View):
 class PlanetList(TemplateView):
     template_name = "planet_list.html"
  #adds artist class for mock database data
- 
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["planets"] = Planet.objects.all() # this is where we add the key into our context object for the view to use
+        name = self.request.GET.get('name')
+        if name != None:
+            context["planets"] = Planet.objects.filter(name__icontains=name)
+            context['header'] = f"Searching for {name}"
+        else:
+            context["planets"] = Planet.objects.all()# this is where we add the key into our context object for the view to use
+            context["header"] = "WellKnown Planets"
         return context
+
+class PlanetCreate(CreateView):
+    model = Planet
+    fields = ['name', 'img', 'bio', 'verified_planet']
+    template_name = "planet_create.html"
+    success_url = "/list/"
+
+class PlanetDetail(DetailView):
+    model = Planet
+    template_name = "planet_detail.html"
