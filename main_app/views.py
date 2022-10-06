@@ -5,8 +5,9 @@ from django.views import View # <- View class to handle requests
 from django.http import HttpResponse # <- a class to handle sending a type of response
 from django.views.generic.base import TemplateView
 from .models import Planet
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic import DetailView
+from django.urls import reverse
 # Create your views here.
 
 # Here we will be creating a class called Home and extending it from the View class
@@ -36,7 +37,7 @@ class PlanetList(View):
 
 class PlanetList(TemplateView):
     template_name = "planet_list.html"
- #adds artist class for mock database data
+ #adds planet class for mock database data
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -53,8 +54,16 @@ class PlanetCreate(CreateView):
     model = Planet
     fields = ['name', 'img', 'bio', 'verified_planet']
     template_name = "planet_create.html"
-    success_url = "/list/"
+    def get_success_url(self):
+        return reverse('planet_detail', kwargs={'pk': self.object.pk})
 
 class PlanetDetail(DetailView):
     model = Planet
     template_name = "planet_detail.html"
+
+class PlanetUpdate(UpdateView):
+    model = Planet
+    fields = ['name', 'img', 'bio', 'verified_planet']
+    template_name = "planet_update.html"
+    def get_success_url(self):
+        return reverse('planet_detail', kwargs={'pk': self.object.pk})
