@@ -4,20 +4,20 @@ from django.shortcuts import render
 from django.views import View # <- View class to handle requests
 from django.http import HttpResponse # <- a class to handle sending a type of response
 from django.views.generic.base import TemplateView
-from .models import Planet
+from .models import Planet, Info, Surface
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import DetailView
 from django.urls import reverse
 # Create your views here.
 
 # Here we will be creating a class called Home and extending it from the View class
-class Home(View):
+# class Home(View):
 
-    # Here we are adding a method that will be run when we are dealing with a GET request
-    def get(self, request):
-        # Here we are returning a generic response
-        # This is similar to response.send() in express
-        return HttpResponse("Planets Home")
+#     # Here we are adding a method that will be run when we are dealing with a GET request
+#     def get(self, request):
+#         # Here we are returning a generic response
+#         # This is similar to response.send() in express
+#         return HttpResponse("Planets Home")
 
 #...
 class About(View):
@@ -27,6 +27,10 @@ class About(View):
 
 class Home(TemplateView):
     template_name = "home.html"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["surfaces"] = Surface.objects.all()
+        return context
 
 class About(TemplateView):
     template_name = "about.html"
@@ -72,3 +76,4 @@ class PlanetDelete(DeleteView):
     model = Planet
     template_name = "planet_delete.html"
     success_url = "/list/"
+

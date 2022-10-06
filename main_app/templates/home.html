@@ -9,7 +9,26 @@
     <body>
         {% extends 'base.html' %}
         {% block content %}
-        <h1>Planets Home</h1>
+        <div class="home__playlists">
+            {% for surface in surfaces %}
+        
+                <div class="playlist mb-5">
+                    <h3 class="title is-3 has-text-success">{{surface.namesake}}</h3>
+                    <hr />
+        
+                    {% for info in surface.moons.all %}
+        
+                        <div class="song">
+                            <span>{{forloop.counter}}</span>
+                            <span><b>{{info.namesake}}</b></span>
+                        </div>
+        
+                    {% endfor %}
+                </div>
+            {% empty %} 
+                <div class="playlist mb-5">"No info"</div>
+            {% endfor %}
+        </div>
         {% endblock %}
     </body>
 </html>

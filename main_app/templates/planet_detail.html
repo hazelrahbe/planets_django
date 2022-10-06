@@ -34,8 +34,8 @@
     {% for info in planet.moons.all %}
         <div class="song">
             <span>{{forloop.counter}}</span>
-            <span><b>{{info.namaesake}}</b></span>
-            <span>{{info.years}}</span>
+            <span><b>{{info.namesake}}</b></span>
+            <span>{{info.years}} Earth Years</span>
         </div>
     {% empty %}
         <article class="message">
